@@ -22,6 +22,11 @@ export interface GameState {
   winner?: number;
 }
 
+export interface StackItemAndIndex {
+  stack_item: StackItem;
+  index: number;
+}
+
 export interface GameStateManager {
   game_state: GameState;
 
@@ -30,19 +35,20 @@ export interface GameStateManager {
     location: [number, number]
   ) => void;
 
-  get_stack_items_for_set: (set: number) => {value: StackItem; index: number}[];
+  get_stack_items_for_set: (set: number) => StackItemAndIndex[];
 }
 
 function _get_stack_items_for_set(all_stack_items: StackItem[], set: number) {
   return all_stack_items
-    .map((value, index) => ({value, index}))
-    .filter(item => item.value.set === set);
+    .map((value, index) => ({stack_item: value, index}))
+    .filter(item => item.stack_item.set === set);
 }
 
 export function get_game_state_manager(
-  didUpdate: () => void
+  didUpdate?: () => void
 ): GameStateManager {
   const state = get_default_game_state();
+  console.log(state);
 
   return {
     game_state: state,
@@ -72,7 +78,7 @@ export function get_game_state_manager(
       const current_set_stack_items = _get_stack_items_for_set(
         state.stack_items,
         state.active_set
-      ).map(item => item.value);
+      ).map(item => item.stack_item);
 
       const is_there_a_winner = is_there_a_winner_in_stack_items(
         current_set_stack_items
@@ -81,10 +87,10 @@ export function get_game_state_manager(
       if (is_there_a_winner === true) {
         state.winner = state.active_set;
         state.state = 'ended';
-        didUpdate();
+        didUpdate?.();
       } else {
         state.active_set = state.active_set < 3 ? (state.active_set += 1) : 0;
-        didUpdate();
+        didUpdate?.();
       }
     },
     get_stack_items_for_set: set => {
@@ -135,7 +141,7 @@ function get_default_game_state(): GameState {
 // * Validations
 // *===================================
 
-function format_location_key(location: [number, number]) {
+function format_location_to_key(location: [number, number]) {
   return location.join('_');
 }
 
@@ -210,9 +216,9 @@ function get_all_from_locations(
   location_two: [number, number],
   location_three: [number, number]
 ) {
-  const items_0_0 = map.get(format_location_key(location_one));
-  const items_1_1 = map.get(format_location_key(location_two));
-  const items_2_2 = map.get(format_location_key(location_three));
+  const items_0_0 = map.get(format_location_to_key(location_one));
+  const items_1_1 = map.get(format_location_to_key(location_two));
+  const items_2_2 = map.get(format_location_to_key(location_three));
 
   // if any are undefined, return nothing
   if (
@@ -273,7 +279,7 @@ function get_all_nodes(map: Map<string, PlacedStackItem[]>) {
   ];
   const items = nodes
     .map(node => {
-      return map.get(format_location_key(node));
+      return map.get(format_location_to_key(node));
     })
     .flatMap(x => (x ? [x] : []));
 
@@ -300,7 +306,7 @@ export function is_there_a_winner_in_stack_items(
     if (location === undefined) {
       continue;
     }
-    const key = format_location_key(location);
+    const key = format_location_to_key(location);
     const map_value = map.get(key);
     const placed_item = {location, size};
     if (map_value === undefined) {
