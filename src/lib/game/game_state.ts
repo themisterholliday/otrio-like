@@ -10,11 +10,6 @@ export interface StackItem {
   location?: [number, number];
 }
 
-export interface PlacedStackItem {
-  size: Size;
-  location: [number, number];
-}
-
 export interface GameState {
   state: 'playing' | 'ended';
   stack_items: StackItem[];
@@ -63,7 +58,14 @@ export function get_game_state_manager(
 
       // if location and size is already used, disallow
       const existing_items = state.stack_items.filter(item => {
-        return item.size === size && item.location === location;
+        if (item.location === undefined) {
+          return false;
+        }
+        return (
+          item.size === size &&
+          format_location_to_key(item.location) ===
+            format_location_to_key(location)
+        );
       });
       if (existing_items.length > 0) {
         console.warn('There are existing items for this location and size');
@@ -86,6 +88,7 @@ export function get_game_state_manager(
 
       if (is_there_a_winner === true) {
         state.winner = state.active_set;
+        console.log({winner: state.winner});
         state.state = 'ended';
         didUpdate?.();
       } else {
@@ -141,26 +144,28 @@ function get_default_game_state(): GameState {
 // * Validations
 // *===================================
 
+interface ValidationStackItem {
+  size: Size;
+  location: [number, number];
+}
+
+// NOTE: We have this because we can't use a tuple as a akey or for checking equality. There is probably a better way to do all this.
 function format_location_to_key(location: [number, number]) {
   return location.join('_');
 }
 
-function check_is_all_the_same_size(stack_items: PlacedStackItem[]): boolean {
+function check_is_all_the_same_size(
+  stack_items: ValidationStackItem[]
+): boolean {
   if (stack_items.length !== 3) {
-    // throw new Error(
-    //   `Stack Items is ${stack_items.length} which is not the required 3`
-    // );
     return false;
   }
   const {size} = stack_items[0];
   return stack_items.every(item => item.size === size);
 }
 
-function check_is_ascending(stack_items: PlacedStackItem[]): boolean {
+function check_is_ascending(stack_items: ValidationStackItem[]): boolean {
   if (stack_items.length !== 3) {
-    // throw new Error(
-    //   `Stack Items is ${stack_items.length} which is not the required 3`
-    // );
     return false;
   }
 
@@ -171,11 +176,8 @@ function check_is_ascending(stack_items: PlacedStackItem[]): boolean {
   );
 }
 
-function check_is_descending(stack_items: PlacedStackItem[]): boolean {
+function check_is_descending(stack_items: ValidationStackItem[]): boolean {
   if (stack_items.length !== 3) {
-    // throw new Error(
-    //   `Stack Items is ${stack_items.length} which is not the required 3`
-    // );
     return false;
   }
 
@@ -186,7 +188,7 @@ function check_is_descending(stack_items: PlacedStackItem[]): boolean {
   );
 }
 
-function check_all(stack_items: PlacedStackItem[]) {
+function check_all(stack_items: ValidationStackItem[]) {
   return (
     check_is_all_the_same_size(stack_items) ||
     check_is_ascending(stack_items) ||
@@ -195,9 +197,9 @@ function check_all(stack_items: PlacedStackItem[]) {
 }
 
 function get_all_combinations(
-  one: PlacedStackItem[],
-  two: PlacedStackItem[],
-  three: PlacedStackItem[]
+  one: ValidationStackItem[],
+  two: ValidationStackItem[],
+  three: ValidationStackItem[]
 ) {
   const items = [];
   for (const item_one of one) {
@@ -211,7 +213,7 @@ function get_all_combinations(
 }
 
 function get_all_from_locations(
-  map: Map<string, PlacedStackItem[]>,
+  map: Map<string, ValidationStackItem[]>,
   location_one: [number, number],
   location_two: [number, number],
   location_three: [number, number]
@@ -239,7 +241,7 @@ function get_all_from_locations(
   return combinations;
 }
 
-function get_all_rows(map: Map<string, PlacedStackItem[]>) {
+function get_all_rows(map: Map<string, ValidationStackItem[]>) {
   const items = [
     ...get_all_from_locations(map, [0, 0], [1, 0], [2, 0]),
     ...get_all_from_locations(map, [0, 1], [1, 1], [2, 1]),
@@ -248,7 +250,7 @@ function get_all_rows(map: Map<string, PlacedStackItem[]>) {
   return items;
 }
 
-function get_all_columns(map: Map<string, PlacedStackItem[]>) {
+function get_all_columns(map: Map<string, ValidationStackItem[]>) {
   const items = [
     ...get_all_from_locations(map, [0, 0], [0, 1], [0, 2]),
     ...get_all_from_locations(map, [1, 0], [1, 1], [1, 2]),
@@ -257,15 +259,15 @@ function get_all_columns(map: Map<string, PlacedStackItem[]>) {
   return items;
 }
 
-function get_all_cross(map: Map<string, PlacedStackItem[]>) {
+function get_all_cross(map: Map<string, ValidationStackItem[]>) {
   return get_all_from_locations(map, [0, 0], [1, 1], [2, 2]);
 }
 
-function get_all_anti_cross(map: Map<string, PlacedStackItem[]>) {
+function get_all_anti_cross(map: Map<string, ValidationStackItem[]>) {
   return get_all_from_locations(map, [2, 0], [1, 1], [0, 2]);
 }
 
-function get_all_nodes(map: Map<string, PlacedStackItem[]>) {
+function get_all_nodes(map: Map<string, ValidationStackItem[]>) {
   const nodes: [number, number][] = [
     [0, 0],
     [0, 1],
@@ -299,7 +301,7 @@ export function is_there_a_winner_in_stack_items(
   // check asc/dec - x, y, cross, and in each node
 
   // group all by location
-  const map: Map<string, PlacedStackItem[]> = new Map();
+  const map: Map<string, ValidationStackItem[]> = new Map();
 
   for (const item of stack_items) {
     const {location, size} = item;
@@ -357,4 +359,24 @@ export function is_there_a_winner_in_stack_items(
   }
 
   return false;
+}
+
+// *===================================
+// * Misc
+// *===================================
+
+export function get_color_for_set(set: number) {
+  if (set === 0) {
+    return 'rgb(191	226	231)';
+  }
+  if (set === 1) {
+    return 'rgb(245	227	146	)';
+  }
+  if (set === 2) {
+    return 'rgb(230	241	140)';
+  }
+  if (set === 3) {
+    return 'rgb(195	74	62)';
+  }
+  return 'magenta';
 }

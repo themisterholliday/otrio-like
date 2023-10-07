@@ -1,5 +1,8 @@
 <script lang="ts">
-  import type {StackItem as GameStackItem} from '../game/game_state';
+  import {
+    get_color_for_set,
+    type StackItem as GameStackItem,
+  } from '../game/game_state';
   import StackItem from './StackItem.svelte';
 
   import {createEventDispatcher} from 'svelte';
@@ -11,19 +14,10 @@
   export let stack_items: GameStackItem[];
 
   function get_color_from_set(set: number | undefined) {
-    if (set === 0) {
-      return 'magenta';
+    if (set === undefined) {
+      return undefined;
     }
-    if (set === 1) {
-      return 'red';
-    }
-    if (set === 2) {
-      return 'blue';
-    }
-    if (set === 3) {
-      return 'green';
-    }
-    return undefined;
+    return get_color_for_set(set);
   }
 
   function format_location_to_key(location: [number, number]) {
@@ -110,6 +104,9 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
 
-    background-color: wheat;
+    background-color: #f9f9f9;
+
+    border-radius: 2rem;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
   }
 </style>

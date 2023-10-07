@@ -1,6 +1,7 @@
 <script lang="ts">
   import type {
     StackItem as GameStackItem,
+    Size,
     StackItemAndIndex,
   } from '../game/game_state';
   import {chunk} from '../util/chunk';
@@ -8,6 +9,7 @@
 
   export let direction = 'row';
   export let color = 'magenta';
+  export let highlighted = false;
 
   export let stack_items: StackItemAndIndex[];
 
@@ -22,35 +24,59 @@
     const has_large =
       valid_items.find(item => item.stack_item.size === 'large') !== undefined;
     return {
-      color_small: has_small ? color : 'gray',
-      color_medium: has_medium ? color : 'gray',
-      color_large: has_large ? color : 'gray',
+      color_small: has_small ? color : undefined,
+      color_medium: has_medium ? color : undefined,
+      color_large: has_large ? color : undefined,
+      stack_items: group,
     };
   });
-  let selected_size = 'small';
+
+  let selected_item: StackItemAndIndex | undefined = undefined;
+  let selected_size: Size = 'small';
+
+  import {createEventDispatcher} from 'svelte';
+
+  const dispatch = createEventDispatcher<{
+    selected_item: StackItemAndIndex;
+  }>();
+
+  function handle_stack_item_click(stack_items: StackItemAndIndex[]) {
+    const selectable_items = stack_items.filter(
+      item => item.stack_item.location === undefined
+    );
+
+    let item = selectable_items.find(
+      item => item.stack_item.size === selected_size
+    );
+    let index = selectable_items.findIndex(
+      item => item.stack_item.size === selected_size
+    );
+
+    if (item === undefined) {
+      return;
+    }
+
+    const next_index = index + 1 < selectable_items.length ? index + 1 : 0;
+    selected_size = selectable_items[next_index].stack_item.size;
+
+    selected_item = item;
+    dispatch('selected_item', selected_item);
+  }
+
+  function is_highlighted(
+    stack_items: StackItemAndIndex[],
+    selected_item: StackItemAndIndex | undefined
+  ) {
+    if (selected_item !== undefined) {
+      return stack_items.includes(selected_item) === true
+        ? selected_item.stack_item.size
+        : undefined;
+    }
+    return undefined;
+  }
 </script>
 
-<div class="container">
-  <div>
-    <button
-      class={selected_size === 'small' ? 'selected' : ''}
-      on:click={() => (selected_size = 'small')}
-    >
-      small
-    </button>
-    <button
-      class={selected_size === 'medium' ? 'selected' : ''}
-      on:click={() => (selected_size = 'medium')}
-    >
-      medium
-    </button>
-    <button
-      class={selected_size === 'large' ? 'selected' : ''}
-      on:click={() => (selected_size = 'large')}
-    >
-      large
-    </button>
-  </div>
+<div class="container {highlighted ? 'highlight' : ''}">
   <div
     class="stack_item_container"
     style="--columns:{direction === 'row' ? 3 : 1};"
@@ -60,6 +86,9 @@
         color_small={group.color_small}
         color_medium={group.color_medium}
         color_large={group.color_large}
+        is_disabled={highlighted === false}
+        highlight={is_highlighted(group.stack_items, selected_item)}
+        on:click={() => handle_stack_item_click(group.stack_items)}
       />
     {/each}
   </div>
@@ -70,6 +99,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    border-radius: 2rem;
   }
 
   .stack_item_container {
@@ -79,8 +109,8 @@
     gap: 0.5rem;
   }
 
-  .selected {
-    background-color: #ff3e00;
-    color: white;
+  .highlight {
+    /* background-color: ; */
+    outline: 0.2rem solid gold;
   }
 </style>

@@ -4,7 +4,9 @@
 
 <main>
   <!-- App -->
-  <FullGameBoard />
+  <span class="container">
+    <FullGameBoard />
+  </span>
 </main>
 
 <style>
@@ -12,13 +14,10 @@
     height: 100%;
   }
 
-  .stack_item_container {
-    height: 20%;
-  }
-
-  .stack_item_container_column {
-    height: 60%;
-    width: 20%;
-    margin: 0 auto;
+  .container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>

@@ -74,18 +74,11 @@ textarea:not([rows]) {
 /* Custom for app, not the CSS Reset above. */
 html, body {
   height: 100%;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 #app {
   height: 100%;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-
-* {
-    /* outline: 2px solid blue; */
-    /* box-shadow: 0 0 0 2px magenta; */
+  
+  --stack_item_size: 10vw;
 }
