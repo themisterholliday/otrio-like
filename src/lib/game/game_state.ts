@@ -43,7 +43,6 @@ export function get_game_state_manager(
   didUpdate?: () => void
 ): GameStateManager {
   const state = get_default_game_state();
-  console.log(state);
 
   return {
     game_state: state,
@@ -88,7 +87,6 @@ export function get_game_state_manager(
 
       if (is_there_a_winner === true) {
         state.winner = state.active_set;
-        console.log({winner: state.winner});
         state.state = 'ended';
         didUpdate?.();
       } else {
@@ -367,16 +365,16 @@ export function is_there_a_winner_in_stack_items(
 
 export function get_color_for_set(set: number) {
   if (set === 0) {
-    return 'rgb(191	226	231)';
+    return '#4385BE';
   }
   if (set === 1) {
-    return 'rgb(245	227	146	)';
+    return '#D0A215';
   }
   if (set === 2) {
-    return 'rgb(230	241	140)';
+    return '#879A39';
   }
   if (set === 3) {
-    return 'rgb(195	74	62)';
+    return '#D14D41';
   }
   return 'magenta';
 }

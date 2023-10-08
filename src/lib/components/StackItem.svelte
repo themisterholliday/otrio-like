@@ -76,7 +76,7 @@
   }
 
   .circle_filled {
-    border: solid 1vw var(--color);
+    border: solid calc(var(--stack_item_size) * 0.08) var(--color);
   }
 
   .circle_empty {

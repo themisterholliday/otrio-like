@@ -4,6 +4,7 @@
 
 <main>
   <!-- App -->
+  <p class="title">Otrio-Like</p>
   <span class="container">
     <FullGameBoard />
   </span>
@@ -19,5 +20,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .title {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+
+    font-style: italic;
   }
 </style>

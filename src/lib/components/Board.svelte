@@ -104,7 +104,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
 
-    background-color: #f9f9f9;
+    background-color: #fffcf0;
 
     border-radius: 2rem;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);

@@ -126,7 +126,7 @@
       calc(calc(var(--stack_item_size) * 2) + var(--colum_size)) + 4rem
     );
 
-    background-color: #f9f9f9;
+    background-color: #fffcf0;
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.5);
 
     border-radius: 2rem;
