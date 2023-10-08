@@ -109,20 +109,27 @@
       'nav content side'
       '. footer .';
 
-    grid-template-columns: 1fr calc(var(--stack_item_size) * 5) 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-gap: 0.5rem;
+    --grid-gap: 0.25rem;
+    --colum_size: calc(
+      calc(var(--stack_item_size) * 3) + calc(var(--grid-gap) * 2) + 3rem
+    );
+
+    grid-template-columns: 1fr var(--colum_size) 1fr;
+    grid-template-rows: 1fr var(--colum_size) 1fr;
+    grid-gap: var(--grid-gap);
 
     width: 100%;
-    max-width: calc(calc(var(--stack_item_size) * 8) + 2rem);
-    max-height: calc(calc(var(--stack_item_size) * 8) + 2rem);
+    max-width: calc(
+      calc(calc(var(--stack_item_size) * 2) + var(--colum_size)) + 4rem
+    );
+    max-height: calc(
+      calc(calc(var(--stack_item_size) * 2) + var(--colum_size)) + 4rem
+    );
 
     background-color: #f9f9f9;
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.5);
 
     border-radius: 2rem;
-
-    padding: 1rem;
   }
 
   .board {

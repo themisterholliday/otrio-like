@@ -110,7 +110,6 @@
   }
 
   .highlight {
-    /* background-color: ; */
-    outline: 0.2rem solid gold;
+    outline: 0.4vw solid gold;
   }
 </style>

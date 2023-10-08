@@ -76,26 +76,26 @@
   }
 
   .circle_filled {
-    border: solid 0.5rem var(--color);
+    border: solid 1vw var(--color);
   }
 
   .circle_empty {
-    box-shadow: inset 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0px 0px 0.6vw 0px rgba(0, 0, 0, 0.5);
   }
 
   .circle_middle {
-    height: 10vh;
+    height: calc(var(--stack_item_size) * 0.66);
   }
 
   .circle_inner {
-    height: 5vh;
+    height: calc(var(--stack_item_size) * 0.33);
   }
 
   .circle_outer {
-    height: 15vh;
+    height: var(--stack_item_size);
   }
 
   .highlight {
-    outline: 0.2rem solid gold;
+    outline: 0.4vw solid gold;
   }
 </style>
