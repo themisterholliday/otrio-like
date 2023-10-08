@@ -70,7 +70,6 @@
   .circle {
     margin: 0 auto;
     border-radius: 50%;
-    margin: 0 auto;
 
     aspect-ratio: 1 / 1;
   }
@@ -85,14 +84,17 @@
 
   .circle_middle {
     height: calc(var(--stack_item_size) * 0.66);
+    width: calc(var(--stack_item_size) * 0.66);
   }
 
   .circle_inner {
     height: calc(var(--stack_item_size) * 0.33);
+    width: calc(var(--stack_item_size) * 0.33);
   }
 
   .circle_outer {
     height: var(--stack_item_size);
+    width: var(--stack_item_size);
   }
 
   .highlight {
