@@ -45,13 +45,13 @@ describe('Game State is Playing', () => {
     const state_manager = get_game_state_manager(didUpdate);
 
     state_manager.update_stack_item_location(0, [0, 0]);
-    expect(state_manager.get_stack_items_for_set(0)[0].value.location).toEqual([
-      0, 0,
-    ]);
+    expect(
+      state_manager.get_stack_items_for_set(0)[0].stack_item.location
+    ).toEqual([0, 0]);
     state_manager.update_stack_item_location(1, [0, 1]);
-    expect(state_manager.get_stack_items_for_set(0)[1].value.location).toEqual([
-      0, 1,
-    ]);
+    expect(
+      state_manager.get_stack_items_for_set(0)[1].stack_item.location
+    ).toEqual([0, 1]);
   });
 
   it('disallows illegal actions - update location twice', () => {
@@ -59,13 +59,14 @@ describe('Game State is Playing', () => {
     const state_manager = get_game_state_manager(didUpdate);
 
     state_manager.update_stack_item_location(0, [0, 0]);
-    expect(state_manager.get_stack_items_for_set(0)[0].value.location).toEqual([
-      0, 0,
-    ]);
+
+    expect(
+      state_manager.get_stack_items_for_set(0)[0].stack_item.location
+    ).toEqual([0, 0]);
     state_manager.update_stack_item_location(0, [0, 1]);
-    expect(state_manager.get_stack_items_for_set(0)[0].value.location).toEqual([
-      0, 0,
-    ]);
+    expect(
+      state_manager.get_stack_items_for_set(0)[0].stack_item.location
+    ).toEqual([0, 0]);
   });
 
   it('disallows illegal actions - duplicate location', () => {
@@ -73,13 +74,13 @@ describe('Game State is Playing', () => {
     const state_manager = get_game_state_manager(didUpdate);
 
     state_manager.update_stack_item_location(0, [0, 0]);
-    expect(state_manager.get_stack_items_for_set(0)[0].value.location).toEqual([
-      0, 0,
-    ]);
+    expect(
+      state_manager.get_stack_items_for_set(0)[0].stack_item.location
+    ).toEqual([0, 0]);
     state_manager.update_stack_item_location(3, [0, 0]);
-    expect(state_manager.get_stack_items_for_set(0)[3].value.location).toEqual([
-      0, 0,
-    ]);
+    expect(
+      state_manager.get_stack_items_for_set(0)[3].stack_item.location
+    ).toEqual(undefined);
   });
 
   it.todo('disallows illegal actions - non-active set actions');
@@ -206,7 +207,7 @@ describe('Game Examples', () => {
     update_stack_item_location(set_0[1].index, [1, 0]);
     update_stack_item_location(set_1[1].index, [0, 1]);
     update_stack_item_location(set_2[1].index, [0, 2]);
-    update_stack_item_location(set_3[1].index, [1, 0]);
+    update_stack_item_location(set_3[1].index, [1, 1]);
 
     // turn 3
     update_stack_item_location(set_0[2].index, [2, 0]);
