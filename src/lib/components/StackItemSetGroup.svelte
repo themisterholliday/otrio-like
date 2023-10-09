@@ -143,12 +143,33 @@
   }
 
   .highlight_row {
-    top: calc(50% - 1.75vw);
+    top: calc(50% - 3vw);
     left: -3.5vw;
   }
 
   .highlight_col {
     top: -3.5vw;
     left: calc(50% - 1.75vw);
+  }
+
+  @media (min-width: 640px) {
+    .highlight {
+      width: 3.5vh;
+      height: 3.5vh;
+    }
+
+    svg {
+      stroke-width: 2.5vh;
+    }
+
+    .highlight_row {
+      top: calc(50% - 1.75vh);
+      left: -3.5vh;
+    }
+
+    .highlight_col {
+      top: -3.5vh;
+      left: calc(50% - 1.75vh);
+    }
   }
 </style>

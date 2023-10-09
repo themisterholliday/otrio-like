@@ -101,35 +101,5 @@ body {
   height: 100%;
   padding-block: 1rem;
   
-  --stack_item_size: 15vw;
-}
-
-@media (min-width: 640px) {
-  #app {
-    --stack_item_size: 15vw;
-  }
-}
-
-@media (min-width: 768px) {
-  #app {
-    --stack_item_size: 13vw;
-  }
-}
-
-@media (min-width: 1024px) {
-  #app {
-    --stack_item_size: 10vw;
-  }
-}
-
-@media (min-width: 1280px) {
-  #app {
-    --stack_item_size: 9vw;
-  }
-}
-
-@media (min-width: 1536px) {
-  #app {
-    --stack_item_size: 12.5vw;
-  }
+  --stack_item_size: min(15vw, 15vh);
 }
