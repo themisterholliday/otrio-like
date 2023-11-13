@@ -4,7 +4,7 @@ A website that emulates the popular game [Otrio](https://otrio.com/)
 
 ## TODO
 
-- Update CSS to better handle smaller and larger screens
+- [x] Update CSS to better handle smaller and larger screens
 - Add some UI tests
 - Finish up a couple of game state tests
 - Add multiplayer??

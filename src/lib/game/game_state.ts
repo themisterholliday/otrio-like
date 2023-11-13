@@ -28,7 +28,7 @@ export interface GameStateManager {
   update_stack_item_location: (
     index: number,
     location: [number, number]
-  ) => void;
+  ) => Boolean;
 
   get_stack_items_for_set: (set: number) => StackItemAndIndex[];
 }
@@ -47,12 +47,13 @@ export function get_game_state_manager(
   return {
     game_state: state,
     update_stack_item_location: (index, location) => {
+      console.log('update_stack_item_location');
       const {size, location: stack_item_location} = state.stack_items[index];
 
       // if location already set for index, disallow
       if (stack_item_location !== undefined) {
         console.warn('Stack item already has location');
-        return;
+        return false;
       }
 
       // if location and size is already used, disallow
@@ -66,9 +67,10 @@ export function get_game_state_manager(
             format_location_to_key(location)
         );
       });
+
       if (existing_items.length > 0) {
         console.warn('There are existing items for this location and size');
-        return;
+        return false;
       }
 
       // todo: disallow moves for non-active set items
@@ -93,6 +95,7 @@ export function get_game_state_manager(
         state.active_set = state.active_set < 3 ? (state.active_set += 1) : 0;
         didUpdate?.();
       }
+      return true;
     },
     get_stack_items_for_set: set => {
       return _get_stack_items_for_set(state.stack_items, set);

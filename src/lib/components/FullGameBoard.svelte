@@ -31,11 +31,13 @@
     event: CustomEvent<[number, number]>
   ) {
     if (selected_item !== undefined) {
-      game_state_manager.update_stack_item_location(
+      const success = game_state_manager.update_stack_item_location(
         selected_item.index,
         event.detail
       );
-      selected_item = undefined;
+      if (success === true) {
+        selected_item = undefined;
+      }
     }
   }
 
